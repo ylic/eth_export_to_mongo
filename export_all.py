@@ -29,3 +29,5 @@ def export_all():
 
     #关闭数据库连接
     db.close()
+
+export_all()
