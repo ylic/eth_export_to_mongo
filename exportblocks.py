@@ -66,15 +66,11 @@ class ExportBlocks():
     def _export_transaction(self,item):
     
         print("_export_transaction")
-        print("aaaa:")
         for tx in item.transactions:
-            print(111)
+            
             item = self.transaction_mapper.transaction_to_dict(tx)
-            print(112)
             ex = self.block_item_exporter.get_export(item)
-            print(ex)
-            result = ex.get_content(ex)
-            print(113)
+            result = ex.get_content(item)   
 
             try:
                 self.db[ex.db_name].insert_one(result)
