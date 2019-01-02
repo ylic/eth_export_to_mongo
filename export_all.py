@@ -9,8 +9,8 @@ from providers.auto import get_provider_from_uri
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 
-@click.option('-s', '--start-block', default=0, type=int, help='Start block')
-@click.option('-e', '--end-block', required=True, type=int, help='End block')
+@click.option('-s', '--start', default=0, type=int, help='Start block')
+@click.option('-e', '--end', required=True, type=int, help='End block')
 
 @click.option('-p', '--provider-uri', default='https://mainnet.infura.io', type=str,
               help='The URI of the web3 provider e.g. '
@@ -30,4 +30,4 @@ def export_all(start,end,provider_uri):
     #关闭数据库连接
     db.close()
 
-export_all(start-block,end-block,provider-uri)
+export_all()
