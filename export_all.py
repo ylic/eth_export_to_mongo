@@ -25,10 +25,14 @@ def export_all(start,end,provider_uri):
     db = conn.eth
     db.authenticate("root","galaxy123456@")
 
-    eb = ExportBlocks(start,end,get_provider_from_uri(provider_uri,batch=True),db)
-    eb.start()
+    try:
+        eb = ExportBlocks(start,end,get_provider_from_uri(provider_uri,batch=True),db)
+        eb.start()
 
-    #关闭数据库连接
-    db.close()
+        #关闭数据库连接
+        conn.close()
+    except:
+        conn.close()
+
 
 export_all()
