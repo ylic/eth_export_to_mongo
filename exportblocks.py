@@ -50,7 +50,7 @@ class ExportBlocks():
         block = self.block_mapper.json_dict_to_block(result)
         self._export_block(self.block_mapper.block_to_dict(block))
 
-        self._export_transaction(block)
+        #self._export_transaction(block)
             	 
      
     def _export_block(self, item):
