@@ -103,6 +103,7 @@ class MongoItemExporter(BaseItemExporter):
                                              include_empty=True)
         print("get_content111")
         print(fields)
+        print("get_content222")
         lst = dict(fields)
         print(lst)
         return lst
