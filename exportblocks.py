@@ -48,10 +48,9 @@ class ExportBlocks():
         result = rpc_response_to_result(response) 
 
         block = self.block_mapper.json_dict_to_block(result)
-        item = self.block_mapper.block_to_dict(block)
-        print(item)
-        self._export_block(item)
-        self._export_transaction(item)
+        self._export_block(self.block_mapper.block_to_dict(block))
+
+        self._export_transaction(block)
             	 
      
     def _export_block(self, item):
