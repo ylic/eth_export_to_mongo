@@ -66,16 +66,19 @@ class ExportBlocks():
     def _export_transaction(self,item):
     
         print("_export_transaction")
+        trans = []
         for tx in item.transactions:
             
             item = self.transaction_mapper.transaction_to_dict(tx)
             ex = self.block_item_exporter.get_export(item)
-            result = ex.get_content(item)   
+            result = ex.get_content(item)  
 
-            try:
-                self.db[ex.db_name].insert_one(result)
-            except:
-                raise ValueError('Exporter for item insert_one')
+            trans.append(result) 
+
+        try:
+            self.db[ex.db_name].insert_many(trans)
+        except:
+            raise ValueError('Exporter for item insert_one')
 
 
 
