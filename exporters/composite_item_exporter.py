@@ -102,6 +102,7 @@ class MongoItemExporter(BaseItemExporter):
         fields = self._get_serialized_fields(item, default_value='',
                                              include_empty=True)
         print("get_content111")
+        print(fields)
         lst = dict(fields)
         print(lst)
         return lst
