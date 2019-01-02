@@ -1,6 +1,8 @@
 import json
 from utils.json_rpc_requests import generate_get_block_by_number_json_rpc
 from utils.utils import rpc_response_to_result
+from mappers.block_mapper import EthBlockMapper
+from mappers.transaction_mapper import EthTransactionMapper
 
 class ExportBlocks():
     
@@ -16,6 +18,9 @@ class ExportBlocks():
         self.web3_provider = web3_provider
         self.db            = db
         self.cur_block     = start_block
+
+        self.block_mapper = EthBlockMapper()
+        self.transaction_mapper = EthTransactionMapper()
 
         print("ExportBlocks __init__")
 
@@ -34,6 +39,12 @@ class ExportBlocks():
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber)
         response = self.web3_provider.make_request(json.dumps(blockrpc)) 
         result = rpc_response_to_result(response) 
-    
-        print(result)     	 
-          
+
+        block = self.block_mapper.json_dict_to_block(result)
+        print(result) 
+        
+        self._export_block(block)
+            	 
+
+    def _export_block(self, block):
+        print("_export_block")  
