@@ -42,6 +42,7 @@ class ExportBlocks():
 
         print("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
+        print(blockrpc)
         response = self.web3_provider.make_request(json.dumps(blockrpc)) 
         result = rpc_response_to_result(response) 
 
