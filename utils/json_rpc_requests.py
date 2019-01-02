@@ -23,7 +23,8 @@
 def generate_get_block_by_number_json_rpc(block_number,include_transactions):
     return generate_json_rpc(
             method='eth_getBlockByNumber',
-            params=[hex(block_number), include_transactions]
+            params=[hex(block_number), include_transactions],
+            request_id=block_number 
         )
 
 def generate_get_block_by_number_batch_json_rpc(block_numbers, include_transactions):
