@@ -73,6 +73,7 @@ class ExportBlocks():
             item = self.transaction_mapper.transaction_to_dict(tx)
             print(112)
             ex = self.block_item_exporter.get_export(item)
+            print(ex)
             result = ex.get_content(ex)
             print(113)
 
