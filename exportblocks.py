@@ -76,7 +76,8 @@ class ExportBlocks():
             trans.append(result) 
 
         try:
-            self.db[ex.db_name].insert_many(trans)
+            print("test")
+            #self.db[ex.db_name].insert_many(trans)
         except:
             raise ValueError('Exporter for item insert_one')
 
