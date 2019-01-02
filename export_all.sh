@@ -21,4 +21,4 @@ shift $((OPTIND-1))
 if [ -z "${start_block}" ] || [ -z "${end_block}" ] || [ -z "${provider_uri}" ]; then
     usage
 fi
-python3 ./export_all.sh --start-block=${start_block} --end-block=${end_block} --provider-uri="${provider_uri}"
+python3 ./export_all.py --start-block=${start_block} --end-block=${end_block} --provider-uri="${provider_uri}"
