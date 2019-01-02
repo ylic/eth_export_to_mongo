@@ -49,7 +49,7 @@ class ExportBlocks():
 
         block = self.block_mapper.json_dict_to_block(result)
         item = self.block_mapper.block_to_dict(block)
-        
+        print(item)
         self._export_block(item)
         self._export_transaction(item)
             	 
