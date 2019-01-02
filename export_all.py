@@ -15,8 +15,8 @@ from providers.auto import get_provider_from_uri
 @click.option('-p', '--provider-uri', default='https://mainnet.infura.io', type=str,
               help='The URI of the web3 provider e.g. '
                    'file://$HOME/Library/Ethereum/geth.ipc or https://mainnet.infura.io')
-#@click.option('-o', '--output-dir', default='output', type=str, help='Output directory, partitioned in Hive style.')
-def export_all():
+
+def export_all(start,end,provider_uri):
 
     print("export_all")
     #建立数据库连接
@@ -30,4 +30,4 @@ def export_all():
     #关闭数据库连接
     db.close()
 
-export_all()
+export_all(tart-block,end-block,provider-uri)

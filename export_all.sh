@@ -1,4 +1,4 @@
-usage() { echo "Usage: $0 -s <start_block> -e <end_block> -b <batch_size> -p <provider_uri> [-o <output_dir>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 -s <start_block> -e <end_block> -b <batch_size> -p <provider_uri> " 1>&2; exit 1; }
 
 while getopts ":s:e:p:" opt; do
     case "${opt}" in
