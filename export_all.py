@@ -6,6 +6,7 @@ import pymongo as pm
 from datetime import datetime, timedelta
 from web3 import Web3
 from providers.auto import get_provider_from_uri
+from exportblocks import ExportBlocks
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 
