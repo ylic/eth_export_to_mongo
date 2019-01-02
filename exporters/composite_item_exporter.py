@@ -98,10 +98,10 @@ class MongoItemExporter(BaseItemExporter):
         self._configure(kwargs, dont_fail=True)
         
     def get_content(self, item):
-
+        print("get_content")
         fields = self._get_serialized_fields(item, default_value='',
                                              include_empty=True)
-
+        print("get_content111")
         lst = dict(fields)
         return lst
 
