@@ -30,4 +30,4 @@ def export_all(start,end,provider_uri):
     #关闭数据库连接
     db.close()
 
-export_all(tart-block,end-block,provider-uri)
+export_all(start-block,end-block,provider-uri)
