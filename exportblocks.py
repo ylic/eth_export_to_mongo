@@ -13,7 +13,6 @@ class ExportBlocks():
             start_block,
             end_block,
             web3_provider,
-            item_exporter,
             db):
 
         self.start_block   = start_block
