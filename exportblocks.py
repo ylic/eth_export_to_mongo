@@ -36,6 +36,7 @@ class ExportBlocks():
         while(self.cur_block <= self.end_block) :
            self.export_block(self.cur_block)
            self.cur_block  = self.cur_block  + 1
+           print(self.cur_block)
          
 
     def export_block(self,blocknumber): 
@@ -48,7 +49,6 @@ class ExportBlocks():
 
         block = self.block_mapper.json_dict_to_block(result)
         item = self.block_mapper.block_to_dict(block)
-        print(result) 
         
         self._export_block(item)
         self._export_transaction(item)
