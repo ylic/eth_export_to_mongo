@@ -36,6 +36,7 @@ def get_provider_from_uri(uri_string, batch=False):
     uri = urlparse(uri_string)
     if uri.scheme == 'file':
         if batch:
+            print("BatchIPCProvider-----")
             return BatchIPCProvider(uri.path, timeout=DEFAULT_IPC_TIMEOUT)
         else:
             return IPCProvider(uri.path, timeout=DEFAULT_IPC_TIMEOUT)
