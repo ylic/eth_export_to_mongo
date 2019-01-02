@@ -5,7 +5,7 @@ import pymongo as pm
 
 from datetime import datetime, timedelta
 from web3 import Web3
-from ethereumetl.providers.auto import get_provider_from_uri
+from providers.auto import get_provider_from_uri
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 
