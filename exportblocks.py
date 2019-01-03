@@ -56,7 +56,7 @@ class ExportBlocks():
         self._export_transaction(block)
 
         #导出token_transfer
-        self._export_token_transfer(blocknumber)
+        #self._export_token_transfer(blocknumber)
 
      
     def _export_block(self, item):
