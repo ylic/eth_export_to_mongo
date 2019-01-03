@@ -3,6 +3,7 @@ from utils.json_rpc_requests import generate_get_block_by_number_json_rpc
 from utils.utils import rpc_response_to_result
 from mappers.block_mapper import EthBlockMapper
 from mappers.transaction_mapper import EthTransactionMapper
+from mappers.receipt_log_mapper import EthReceiptLogMapper
 from exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 
 TRANSFER_EVENT_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
@@ -27,6 +28,8 @@ class ExportBlocks():
 
         self.block_mapper = EthBlockMapper()
         self.transaction_mapper = EthTransactionMapper()
+        self.receipt_log_mapper = EthReceiptLogMapper()
+
 
         print("ExportBlocks __init__")
 
@@ -101,7 +104,7 @@ class ExportBlocks():
         
         for event in events:
             print(event)
-            #log = self.receipt_log_mapper.web3_dict_to_receipt_log(event)
+            log = self.receipt_log_mapper.web3_dict_to_receipt_log(event)
             #token_transfer = self.token_transfer_extractor.extract_transfer_from_log(log)
             #if token_transfer is not None:
             #    self.item_exporter.export_item(self.token_transfer_mapper.token_transfer_to_dict(token_transfer))
