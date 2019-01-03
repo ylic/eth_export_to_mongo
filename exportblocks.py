@@ -5,6 +5,7 @@ from mappers.block_mapper import EthBlockMapper
 from mappers.transaction_mapper import EthTransactionMapper
 from exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 
+TRANSFER_EVENT_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 
 class ExportBlocks():
     
@@ -47,10 +48,16 @@ class ExportBlocks():
         response = self.web3_provider.make_request(json.dumps(blockrpc)) 
         result = rpc_response_to_result(response) 
 
+        #导出区块
         block = self.block_mapper.json_dict_to_block(result)
         self._export_block(self.block_mapper.block_to_dict(block))
 
+        #导出交易
         self._export_transaction(block)
+
+        #导出token_transfer
+        self._export_token_transfer(blocknumber)
+
      
     def _export_block(self, item):
     
@@ -76,10 +83,30 @@ class ExportBlocks():
             trans.append(result) 
 
         try:
-            print("test")
             self.db[ex.db_name].insert_many(trans)
         except:
             raise ValueError('Exporter for item insert_one')
+
+    def _export_token_transfer(self,blocknumber):
+        print("_export_token_transfer") 
+
+        filter_params = {
+            'fromBlock': blocknumber,
+            'toBlock': blocknumber,
+            'topics': [TRANSFER_EVENT_TOPIC]
+        } 
+
+        event_filter = self.web3_provider.eth.filter(filter_params)
+        events = event_filter.get_all_entries()
+        
+        for event in events:
+            print(event)
+            #log = self.receipt_log_mapper.web3_dict_to_receipt_log(event)
+            #token_transfer = self.token_transfer_extractor.extract_transfer_from_log(log)
+            #if token_transfer is not None:
+            #    self.item_exporter.export_item(self.token_transfer_mapper.token_transfer_to_dict(token_transfer))
+
+        self.web3_provider.eth.uninstallFilter(event_filter.filter_id)
 
 
 
