@@ -4,9 +4,12 @@ from utils.utils import rpc_response_to_result
 from mappers.block_mapper import EthBlockMapper
 from mappers.transaction_mapper import EthTransactionMapper
 from mappers.receipt_log_mapper import EthReceiptLogMapper
-from exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
+from mappers.token_transfer_mapper import EthTokenTransferMapper
 
-TRANSFER_EVENT_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+from exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
+from exporters.token_transfers_item_exporter import token_transfers_item_exporter
+
+from service.token_transfer_extractor import EthTokenTransferExtractor, TRANSFER_EVENT_TOPIC
 
 class ExportBlocks():
     
@@ -26,9 +29,15 @@ class ExportBlocks():
         self.block_item_exporter = blocks_and_transactions_item_exporter()
         self.block_item_exporter.open()
 
+        self.token_transfer_item_exporter = token_transfers_item_exporter()
+        self.token_transfer_item_exporter.open()
+
         self.block_mapper = EthBlockMapper()
         self.transaction_mapper = EthTransactionMapper()
         self.receipt_log_mapper = EthReceiptLogMapper()
+        self.token_transfer_mapper = EthTokenTransferMapper()
+
+        self.token_transfer_extractor = EthTokenTransferExtractor()
 
 
         print("ExportBlocks __init__")
@@ -102,12 +111,21 @@ class ExportBlocks():
         event_filter = self.web3_provider.eth.filter(filter_params)
         events = event_filter.get_all_entries()
         
+        token_transfers = []
         for event in events:
             print(event)
             log = self.receipt_log_mapper.web3_dict_to_receipt_log(event)
-            #token_transfer = self.token_transfer_extractor.extract_transfer_from_log(log)
-            #if token_transfer is not None:
-            #    self.item_exporter.export_item(self.token_transfer_mapper.token_transfer_to_dict(token_transfer))
+            token_transfer = self.token_transfer_extractor.extract_transfer_from_log(log)
+    
+            if token_transfer is not None:
+                item = self.token_transfer_mapper.token_transfer_to_dict(token_transfer)
+                ex = self.token_transfer_item_exporter.get_export(item)
+                result = ex.get_content(item)
+                token_transfers.append(result)
+        try:
+            self.db[ex.db_name].insert_many(token_transfers)
+        except:
+            raise ValueError('Exporter for item insert_one')
 
         self.web3_provider.eth.uninstallFilter(event_filter.filter_id)
 
