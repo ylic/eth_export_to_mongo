@@ -77,7 +77,7 @@ class ExportBlocks():
 
         try:
             print("test")
-            #self.db[ex.db_name].insert_many(trans)
+            self.db[ex.db_name].insert_many(trans)
         except:
             raise ValueError('Exporter for item insert_one')
 
