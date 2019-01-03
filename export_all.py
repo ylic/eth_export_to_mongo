@@ -21,9 +21,13 @@ def export_all(start,end,provider_uri):
 
     print("export_all")
     #建立数据库连接
-    conn = pm.MongoClient('mongodb://localhost:27017/')
+    #conn = pm.MongoClient('mongodb://localhost:27017/')
+    #db = conn.eth
+    #db.authenticate("root","galaxy123456@")
+
+    conn = pm.MongoClient('mongodb://172.17.156.124:27017/')
     db = conn.eth
-    db.authenticate("root","galaxy123456@")
+    #db.authenticate("root","galaxy123456@")
 
     try:
         eb = ExportBlocks(start,end,get_provider_from_uri(provider_uri,batch=True),db)
