@@ -6,14 +6,18 @@ from mappers.transaction_mapper import EthTransactionMapper
 from mappers.receipt_log_mapper import EthReceiptLogMapper
 from mappers.token_transfer_mapper import EthTokenTransferMapper
 from mappers.receipt_mapper import EthReceiptMapper
+from mappers.contract_mapper import EthContractMapper
+from service.eth_contract_service import EthContractService
 
 
 from utils.json_rpc_requests import generate_get_receipt_json_rpc
 from utils.utils import rpc_response_batch_to_results
+from utils.utils import generate_get_code_json_rpc
 
 from exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from exporters.token_transfers_item_exporter import token_transfers_item_exporter
 from exporters.receipts_and_logs_item_exporter import receipts_and_logs_item_exporter
+from exporters.contracts_item_exporter import contracts_item_exporter
 
 from service.token_transfer_extractor import EthTokenTransferExtractor, TRANSFER_EVENT_TOPIC
 
@@ -54,6 +58,11 @@ class ExportBlocks():
         self.receipt_log_mapper = EthReceiptLogMapper()
         self.receipt_mapper = EthReceiptMapper()
 
+        #contract
+        self.contract_mapper = EthContractMapper()
+        self.contract_service = EthContractService()
+        self.contract_item_exporter = contracts_item_exporter()
+
 
         print("ExportBlocks __init__")
 
@@ -83,7 +92,10 @@ class ExportBlocks():
         self._export_token_transfer(blocknumber)
 
         #导出receipt
-        self._export_receipts(trans_hashes)
+        contract_addresses = self._export_receipts(trans_hashes)
+
+        #导出contracts
+        self._export_contracts(contract_addresses)
 
      
     def _export_block(self, block):
@@ -158,8 +170,13 @@ class ExportBlocks():
         response = self.web3_provider.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
         receipts = [self.receipt_mapper.json_dict_to_receipt(result) for result in results]
+        
+        contract_addresses =[]
         for receipt in receipts:
-            self._export_receipt(receipt)
+            ca = self._export_receipt(receipt)
+            if(ca != None):
+                 contract_addresses.append(ca)
+        return contract_addresses
 
     def _export_receipt(self, receipt):
         
@@ -170,6 +187,7 @@ class ExportBlocks():
         try:
             self.db[ex.db_name].insert_one(result)
             self._export_logs(receipt)
+            return item["contract-addresses"]
         except:
             raise ValueError('Exporter for item insert_one')
     
@@ -187,7 +205,47 @@ class ExportBlocks():
         try:
             self.db[ex.db_name].insert_many(logs)
         except:
-            raise ValueError('Exporter for item insert_one')        
+            raise ValueError('Exporter for item insert_one')     
+
+
+    def _export_contracts(self, contract_addresses):
+        contracts_code_rpc = list(generate_get_code_json_rpc(contract_addresses))
+        response_batch = self.web3_provider.make_request(json.dumps(contracts_code_rpc))
+
+        contracts = []
+        for response in response_batch:
+            # request id is the index of the contract address in contract_addresses list
+            request_id = response['id']
+            result = rpc_response_to_result(response)
+
+            contract_address = contract_addresses[request_id]
+            contract = self._get_contract(contract_address, result)
+            contracts.append(contract)
+
+        contract_results = []
+        for contract in contracts:
+            item = self.contract_mapper.contract_to_dict(contract)
+            ex = self.contract_item_exporter.get_export(item)
+            result = ex.get_content(item) 
+            contract_results.append(result)
+        
+        try:
+            self.db[ex.db_name].insert_many(contract_results)
+        except:
+            raise ValueError('Exporter for item insert_one')       
+
+            
+
+    def _get_contract(self, contract_address, rpc_result):
+        contract = self.contract_mapper.rpc_result_to_contract(contract_address, rpc_result)
+        bytecode = contract.bytecode
+        function_sighashes = self.contract_service.get_function_sighashes(bytecode)
+
+        contract.function_sighashes = function_sighashes
+        contract.is_erc20 = self.contract_service.is_erc20_contract(function_sighashes)
+        contract.is_erc721 = self.contract_service.is_erc721_contract(function_sighashes)
+
+        return contract   
 
 
 
