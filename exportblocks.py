@@ -8,6 +8,8 @@ from mappers.token_transfer_mapper import EthTokenTransferMapper
 from mappers.receipt_mapper import EthReceiptMapper
 from mappers.contract_mapper import EthContractMapper
 from service.eth_contract_service import EthContractService
+from service.eth_token_service import EthTokenService
+from mappers.token_mapper import EthTokenMapper
 
 
 from utils.json_rpc_requests import generate_get_receipt_json_rpc
@@ -18,6 +20,7 @@ from exporters.blocks_and_transactions_item_exporter import blocks_and_transacti
 from exporters.token_transfers_item_exporter import token_transfers_item_exporter
 from exporters.receipts_and_logs_item_exporter import receipts_and_logs_item_exporter
 from exporters.contracts_item_exporter import contracts_item_exporter
+from exporters.tokens_item_exporter import tokens_item_exporter
 
 from service.token_transfer_extractor import EthTokenTransferExtractor, TRANSFER_EVENT_TOPIC
 
@@ -27,15 +30,17 @@ class ExportBlocks():
             self,
             start_block,
             end_block,
-            web3_provider,
+            web3_provider_batch,
+            web3,
             db):
 
         self.start_block   = start_block
         self.end_block     = end_block
-        self.web3_provider = web3_provider
+        self.web3_provider_batch = web3_provider_batch
+        self.web3  = web3
         self.db            = db
         self.cur_block     = start_block
-
+        self.tokens        = []
         #block
         self.block_item_exporter = blocks_and_transactions_item_exporter()
         self.block_item_exporter.open()
@@ -64,6 +69,15 @@ class ExportBlocks():
         self.contract_item_exporter = contracts_item_exporter()
 
 
+        #tokens
+        self.token_service = EthTokenService(self.web3,clean_user_provided_content)
+        self.token_mapper = EthTokenMapper()
+        self.tokens_item_exporter = tokens_item_exporter()
+        self.tokens_item_exporter.open()
+
+        self._export_tokens(self.tokens)
+
+
         print("ExportBlocks __init__")
 
     #导出block
@@ -81,7 +95,7 @@ class ExportBlocks():
         print("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
         print(blockrpc)
-        response = self.web3_provider.make_request(json.dumps(blockrpc)) 
+        response = self.web3_provider_batch.make_request(json.dumps(blockrpc)) 
         result = rpc_response_to_result(response) 
 
         #导出区块
@@ -89,7 +103,7 @@ class ExportBlocks():
         trans_hashes = self._export_block(block)
 
         #导出token_transfer
-        self._export_token_transfer(blocknumber)
+        self._export_token_transfers(blocknumber)
 
         #导出receipt
         contract_addresses = self._export_receipts(trans_hashes)
@@ -107,34 +121,35 @@ class ExportBlocks():
               
         try:
             self.db[ex.db_name].insert_one(result)
-            return self._export_transaction(block)
+            return self._export_transactions(block)
         except:
             raise ValueError('Exporter for item insert_one')
 
-    def _export_transaction(self,block):
+    def _export_transactions(self,block):
     
         print("_export_transaction")
         transaction_hash = []
 
-        trans = []
         for tx in block.transactions:
-            
-            item = self.transaction_mapper.transaction_to_dict(tx)
-
-            ex = self.block_item_exporter.get_export(item)
-            result = ex.get_content(item)  
-
-            trans.append(result) 
-            transaction_hash.append(item["hash"])
-
-        try:
-            self.db[ex.db_name].insert_many(trans)
-        except:
-            raise ValueError('Exporter for item insert_one')
+            hash = self._export_transaction(tx)
+            transaction_hash.append(hash)
 
         return transaction_hash
 
-    def _export_token_transfer(self,blocknumber):
+    def _export_transaction(self,tx):
+        
+        item = self.transaction_mapper.transaction_to_dict(tx)
+        ex = self.block_item_exporter.get_export(item)
+        result = ex.get_content(item) 
+
+        try:
+            self.db[ex.db_name].insert_one(result)
+            return item["hash"]
+        except:
+            raise ValueError('Exporter for item insert_one')        
+
+
+    def _export_token_transfers(self,blocknumber):
         print("_export_token_transfer") 
 
         filter_params = {
@@ -143,31 +158,38 @@ class ExportBlocks():
             'topics': [TRANSFER_EVENT_TOPIC]
         } 
 
-        event_filter = self.web3_provider.eth.filter(filter_params)
+        event_filter = self.web3_provider_batch.eth.filter(filter_params)
         events = event_filter.get_all_entries()
         
         token_transfers = []
+
         for event in events:
             print(event)
             log = self.receipt_log_mapper.web3_dict_to_receipt_log(event)
             token_transfer = self.token_transfer_extractor.extract_transfer_from_log(log)
-    
-            if token_transfer is not None:
-                item = self.token_transfer_mapper.token_transfer_to_dict(token_transfer)
-                ex = self.token_transfer_item_exporter.get_export(item)
-                result = ex.get_content(item)
-                token_transfers.append(result)
-        try:
-            self.db[ex.db_name].insert_many(token_transfers)
-        except:
-            raise ValueError('Exporter for item insert_one')
+            self._export_token_transfer(token_transfer)
 
-        self.web3_provider.eth.uninstallFilter(event_filter.filter_id)
+        self.web3_provider_batch.eth.uninstallFilter(event_filter.filter_id)
+
+    def _export_token_transfer(self,token_transfer):
+        
+        if token_transfer is not None:
+            item = self.token_transfer_mapper.token_transfer_to_dict(token_transfer)
+            ex = self.token_transfer_item_exporter.get_export(item)
+            result = ex.get_content(item)
+
+            if(item["token_address"] not in self.tokens):
+                self.tokens.append(item["token_address"])  
+
+            try:
+                self.db[ex.db_name].insert_one(result)
+            except:
+                raise ValueError('Exporter for item insert_one')                                
 
     def  _export_receipts(self,transaction_hashes):
         print("_export_receipts")
         receipts_rpc = list(generate_get_receipt_json_rpc(transaction_hashes))
-        response = self.web3_provider.make_request(json.dumps(receipts_rpc))
+        response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
         receipts = [self.receipt_mapper.json_dict_to_receipt(result) for result in results]
         
@@ -210,7 +232,7 @@ class ExportBlocks():
 
     def _export_contracts(self, contract_addresses):
         contracts_code_rpc = list(generate_get_code_json_rpc(contract_addresses))
-        response_batch = self.web3_provider.make_request(json.dumps(contracts_code_rpc))
+        response_batch = self.web3_provider_batch.make_request(json.dumps(contracts_code_rpc))
 
         contracts = []
         for response in response_batch:
@@ -222,18 +244,21 @@ class ExportBlocks():
             contract = self._get_contract(contract_address, result)
             contracts.append(contract)
 
-        contract_results = []
         for contract in contracts:
-            item = self.contract_mapper.contract_to_dict(contract)
-            ex = self.contract_item_exporter.get_export(item)
-            result = ex.get_content(item) 
-            contract_results.append(result)
+            self._export_contract(contract)
         
-        try:
-            self.db[ex.db_name].insert_many(contract_results)
-        except:
-            raise ValueError('Exporter for item insert_one')       
+   
+    
+    def _export_contract(self,contract):
 
+        item = self.contract_mapper.contract_to_dict(contract)
+        ex = self.contract_item_exporter.get_export(item)
+        result = ex.get_content(item) 
+
+        try:
+            self.db[ex.db_name].insert_one(result)
+        except:
+            raise ValueError('Exporter for item insert_one')    
             
 
     def _get_contract(self, contract_address, rpc_result):
@@ -246,6 +271,37 @@ class ExportBlocks():
         contract.is_erc721 = self.contract_service.is_erc721_contract(function_sighashes)
 
         return contract   
+
+    def _export_tokens(self, token_addresses):
+
+        for token_address in token_addresses:
+            self._export_token(token_address)
+
+    def _export_token(self, token_address):
+
+        token = self.token_service.get_token(token_address)
+        item = self.token_mapper.token_to_dict(token)
+
+        ex = self.tokens_item_exporter.get_export(item)
+        result = ex.get_content(item) 
+
+        try:
+            self.db[ex.db_name].insert_one(result)
+        except:
+            raise ValueError('Exporter for item insert_one')
+
+    
+ASCII_0 = 0
+
+def clean_user_provided_content(content):
+    
+    if isinstance(content, str):
+        # This prevents this error in BigQuery
+        # Error while reading data, error message: Error detected while parsing row starting at position: 9999.
+        # Error: Bad character (ASCII 0) encountered.
+        return content.translate({ASCII_0: None})
+    else:
+        return content         
 
 
 

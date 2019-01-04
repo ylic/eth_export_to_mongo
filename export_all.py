@@ -30,7 +30,8 @@ def export_all(start,end,provider_uri):
     #db.authenticate("root","galaxy123456@")
 
     try:
-        eb = ExportBlocks(start,end,get_provider_from_uri(provider_uri,batch=True),db)
+        eb = ExportBlocks(start,end,get_provider_from_uri(provider_uri,batch=True),
+        get_provider_from_uri(provider_uri),db)
         eb.start()
 
         #关闭数据库连接
