@@ -25,7 +25,7 @@ def export_all(start,end,provider_uri):
     #db = conn.eth
     #db.authenticate("root","galaxy123456@")
 
-    conn = pm.MongoClient('mongodb://172.17.156.121:27017/')
+    conn = pm.MongoClient('mongodb://127.0.0.1:27017/')
     db = conn.eth
     #db.authenticate("root","galaxy123456@")
 
