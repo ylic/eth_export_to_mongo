@@ -14,7 +14,7 @@ from mappers.token_mapper import EthTokenMapper
 
 from utils.json_rpc_requests import generate_get_receipt_json_rpc
 from utils.utils import rpc_response_batch_to_results
-from utils.utils import generate_get_code_json_rpc
+from utils.json_rpc_requests import generate_get_code_json_rpc
 
 from exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from exporters.token_transfers_item_exporter import token_transfers_item_exporter
