@@ -45,14 +45,14 @@ class BatchIPCProvider(IPCProvider):
     _socket = None
 
     def __init__(self, ipc_path=None, testnet=False, timeout=10):
-        if ipc_path is None:
-            self.ipc_path = get_default_ipc_path(testnet)
-        else:
-            self.ipc_path = ipc_path
+        # if ipc_path is None:
+        #     self.ipc_path = get_default_ipc_path(testnet)
+        # else:
+        #     self.ipc_path = ipc_path
 
-        self.timeout = timeout
-        self._lock = threading.Lock()
-        self._socket = PersistantSocket(self.ipc_path)
+        # self.timeout = timeout
+        # self._lock = threading.Lock()
+        # self._socket = PersistantSocket(self.ipc_path)
 
         super().__init__()
 
