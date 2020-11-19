@@ -29,7 +29,7 @@ from providers.ipc import BatchIPCProvider
 from providers.rpc import BatchHTTPProvider
 
 DEFAULT_IPC_TIMEOUT = 60
-DEFAULT_HTTP_REQUEST_KWARGS = {'timeout': 60}
+DEFAULT_HTTP_REQUEST_KWARGS = {'timeout': 600}
 
 
 def get_provider_from_uri(uri_string, batch=False):
