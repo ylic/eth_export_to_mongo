@@ -36,7 +36,8 @@ def export_all(start,end,provider_uri):
 
         #关闭数据库连接
         conn.close()
-    except:
+    except Exception as e:
+        print(e)
         conn.close()
 
 
