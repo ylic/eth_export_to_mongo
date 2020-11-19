@@ -25,7 +25,9 @@ import json
 import socket
 import threading
 
-from web3 import IPCProvider
+# from web3 import IPCProvider
+
+from web3.providers.base import JSONBaseProvider
 
 from web3.providers.ipc import get_default_ipc_path, PersistantSocket
 from web3._utils.threads import (
@@ -41,18 +43,18 @@ except ImportError:
 # Mostly copied from web3.py/providers/ipc.py. Supports batch requests.
 # Will be removed once batch feature is added to web3.py https://github.com/ethereum/web3.py/issues/832
 # Also see this optimization https://github.com/ethereum/web3.py/pull/849
-class BatchIPCProvider(IPCProvider):
+class BatchIPCProvider(JSONBaseProvider):
     _socket = None
 
     def __init__(self, ipc_path=None, testnet=False, timeout=10):
-        # if ipc_path is None:
-        #     self.ipc_path = get_default_ipc_path(testnet)
-        # else:
-        #     self.ipc_path = ipc_path
+        if ipc_path is None:
+            self.ipc_path = get_default_ipc_path(testnet)
+        else:
+            self.ipc_path = ipc_path
 
-        # self.timeout = timeout
-        # self._lock = threading.Lock()
-        # self._socket = PersistantSocket(self.ipc_path)
+        self.timeout = timeout
+        self._lock = threading.Lock()
+        self._socket = PersistantSocket(self.ipc_path)
 
         super().__init__()
 
