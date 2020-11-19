@@ -98,6 +98,8 @@ class ExportBlocks():
         response = self.web3_provider_batch.make_request(json.dumps(blockrpc)) 
         result = rpc_response_to_result(response) 
 
+        print(result)
+
         #导出区块
         block = self.block_mapper.json_dict_to_block(result)
         trans_hashes = self._export_block(block)
