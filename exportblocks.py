@@ -283,12 +283,10 @@ class ExportBlocks():
             request_id = response['id']
             result = rpc_response_to_result(response)
 
-            print(result)
-
             contract_address = contract_addresses[request_id]
             contract = self._get_contract(contract_address, result)
 
-            print(contract)
+            print('contract',contract)
 
             contracts.append(contract)
 
@@ -299,11 +297,11 @@ class ExportBlocks():
     
     def _export_contract(self,contract):
 
+        print('_export_contract') 
+
         item = self.contract_mapper.contract_to_dict(contract)
         ex = self.contract_item_exporter.get_export(item)
         result = ex.get_content(item) 
-
-        print(result)
 
         try:
             self.db[ex.db_name].insert_one(result)
