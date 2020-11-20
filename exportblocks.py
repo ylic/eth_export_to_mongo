@@ -200,6 +200,8 @@ class ExportBlocks():
     def  _export_receipts(self,transaction_hashes):
         print("_export_receipts")
 
+        print(len(transaction_hashes))
+
         if transaction_hashes is None or len(transaction_hashes) == 0 : return []
 
         print('********************')
