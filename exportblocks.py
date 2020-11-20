@@ -102,12 +102,12 @@ class ExportBlocks():
 
         #导出区块
         block = self.block_mapper.json_dict_to_block(result)
+
+        #交易hash列表
         trans_hashes = self._export_block(block)
 
         #导出token_transfer
         self._export_token_transfers(blocknumber)
-
-        print(trans_hashes)
 
         #导出receipt
         contract_addresses = self._export_receipts(trans_hashes)
@@ -122,8 +122,6 @@ class ExportBlocks():
         item = self.block_mapper.block_to_dict(block)
         ex = self.block_item_exporter.get_export(item)
         result = ex.get_content(item)
-
-        print(result)
               
         try:
             self.db[ex.db_name].insert_one(result)
@@ -194,6 +192,9 @@ class ExportBlocks():
 
     def  _export_receipts(self,transaction_hashes):
         print("_export_receipts")
+
+        if len(transaction_hashes) == 0 : return []
+
         receipts_rpc = list(generate_get_receipt_json_rpc(transaction_hashes))
         response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
@@ -237,6 +238,9 @@ class ExportBlocks():
 
 
     def _export_contracts(self, contract_addresses):
+
+        if len(contract_addresses) == 0 : return
+
         contracts_code_rpc = list(generate_get_code_json_rpc(contract_addresses))
         response_batch = self.web3_provider_batch.make_request(json.dumps(contracts_code_rpc))
 
