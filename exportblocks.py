@@ -273,12 +273,15 @@ class ExportBlocks():
             contract_addresses.append(result["address"])
         # print(ex,ex.db_name)
         try:
-            # self.db[ex.db_name].insert_many(logs)
-            self.db['log'].insert_many(logs)
+            if ex:
+                self.db[ex.db_name].insert_many(logs)
+                # self.db['log'].insert_many(logs)
         except Exception as e:
             print(e)
             # raise ValueError('Exporter for item insert_one')
             print('Exporter for export logs insert_one')
+
+        print(contract_addresses)
 
         return  contract_addresses  
 
