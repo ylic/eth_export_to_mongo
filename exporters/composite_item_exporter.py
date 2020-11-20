@@ -131,10 +131,6 @@ class CompositeItemExporter:
         if item_type is None:
             raise ValueError('type key is not found in item {}'.format(repr(item))) 
 
-        print(item_type,self.mongo_exporter)
-
-        self.open()
-
         mongo_exporter = self.mongo_exporter[item_type]
         if mongo_exporter is None:
             raise ValueError('Exporter for item mongo_exporter not found')

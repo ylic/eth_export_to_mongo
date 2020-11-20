@@ -67,6 +67,7 @@ class ExportBlocks():
         self.contract_mapper = EthContractMapper()
         self.contract_service = EthContractService()
         self.contract_item_exporter = contracts_item_exporter()
+        self.contract_item_exporter.open()
 
 
         #tokens
@@ -74,9 +75,6 @@ class ExportBlocks():
         self.token_mapper = EthTokenMapper()
         self.tokens_item_exporter = tokens_item_exporter()
         self.tokens_item_exporter.open()
-
-        self._export_tokens(self.tokens)
-
 
         print("ExportBlocks __init__")
 
@@ -118,6 +116,9 @@ class ExportBlocks():
 
         #导出contracts
         self._export_contracts(contract_addresses)
+
+        #导出tokens
+        # self._export_tokens(self.tokens)
 
      
     def _export_block(self, block):
@@ -286,8 +287,6 @@ class ExportBlocks():
             contract_address = contract_addresses[request_id]
             contract = self._get_contract(contract_address, result)
 
-            print('contract',contract)
-
             contracts.append(contract)
 
         for contract in contracts:
@@ -301,16 +300,9 @@ class ExportBlocks():
 
         item = self.contract_mapper.contract_to_dict(contract)
 
-        print('item',item)
-
         ex = self.contract_item_exporter.get_export(item)
 
-        print(ex)
-
-
         result = ex.get_content(item) 
-
-        print('result',result)
 
         try:
             self.db[ex.db_name].insert_one(result)
@@ -323,8 +315,6 @@ class ExportBlocks():
         contract = self.contract_mapper.rpc_result_to_contract(contract_address, rpc_result)
         bytecode = contract.bytecode
         function_sighashes = self.contract_service.get_function_sighashes(bytecode)
-
-        print('function_sighashes',function_sighashes)
 
         contract.function_sighashes = function_sighashes
         contract.is_erc20 = self.contract_service.is_erc20_contract(function_sighashes)
