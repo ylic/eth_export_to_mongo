@@ -44,13 +44,10 @@ class EthContractService:
                 push4_instructions = []
 
                 for inst in instructions:
-                    try:
-                        print(bytecode[0,10],'*********')
-                        print(inst)
-                        if  inst.name == 'PUSH4':
-                            push4_instructions.append(inst)
-                    except:
-                        pass
+                    print(bytecode[0,10],'*********')
+                    print(inst)
+                    if  inst.name == 'PUSH4':
+                        push4_instructions.append(inst)
                 # push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
                 return sorted(list(set('0x' + inst.operand for inst in push4_instructions)))
             else:

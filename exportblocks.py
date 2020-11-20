@@ -313,6 +313,7 @@ class ExportBlocks():
     def _get_contract(self, contract_address, rpc_result):
         contract = self.contract_mapper.rpc_result_to_contract(contract_address, rpc_result)
         bytecode = contract.bytecode
+        
         function_sighashes = self.contract_service.get_function_sighashes(bytecode)
 
         contract.function_sighashes = function_sighashes
