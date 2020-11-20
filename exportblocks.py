@@ -236,7 +236,7 @@ class ExportBlocks():
             ca = self._export_receipt(receipt)
             print(ca)
             if(ca != None and len(ca) > 0):
-                 contract_addresses + ca
+                 contract_addresses = contract_addresses + ca
         return contract_addresses
 
     def _export_receipt(self, receipt):
@@ -274,7 +274,7 @@ class ExportBlocks():
             contract_addresses.append(result["address"])
         # print(ex,ex.db_name)
         try:
-            if logs is not None:
+            if len(logs) > 0:
                 # self.db[ex.db_name].insert_many(logs)
                 self.db['log'].insert_many(logs)
         except Exception as e:
