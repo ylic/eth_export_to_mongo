@@ -231,9 +231,10 @@ class ExportBlocks():
 
         receipts = [self.receipt_mapper.json_dict_to_receipt(result) for result in results]
         
-        contract_addresses =[]
+        contract_addresses = []
         for receipt in receipts:
             ca = self._export_receipt(receipt)
+            print(ca)
             if(ca != None and len(ca) > 0):
                  contract_addresses + ca
         return contract_addresses
