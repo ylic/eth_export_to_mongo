@@ -104,11 +104,15 @@ class ExportBlocks():
         #交易hash列表
         trans_hashes = self._export_block(block)
 
+        print('trans_hashes',trans_hashes)
+
+        return
+
         #导出token_transfer
         self._export_token_transfers(blocknumber)
 
 
-        print('trans_hashes',trans_hashes)
+        
 
         #导出receipt
         contract_addresses = self._export_receipts(trans_hashes)
@@ -132,10 +136,12 @@ class ExportBlocks():
               
         try:
             self.db[ex.db_name].insert_one(result)
-            return self._export_transactions(block)
         except:
             # raise ValueError('Exporter for item insert_one')
             print('Exporter for export block insert_one')
+
+        return self._export_transactions(block)
+
 
     def _export_transactions(self,block):
     
@@ -177,7 +183,7 @@ class ExportBlocks():
         token_transfers = []
 
         for event in events:
-            print(event)
+            # print(event)
             log = self.receipt_log_mapper.web3_dict_to_receipt_log(event)
             token_transfer = self.token_transfer_extractor.extract_transfer_from_log(log)
             self._export_token_transfer(token_transfer)
