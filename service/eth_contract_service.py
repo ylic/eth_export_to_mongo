@@ -41,7 +41,7 @@ class EthContractService:
                 except:
                     pass
 
-                print(bytecode[0:10],push4_instructions)
+                print(bytecode[-10:-1],push4_instructions)
 
                 # push4_instructions = []
 
