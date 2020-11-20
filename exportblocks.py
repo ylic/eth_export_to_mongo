@@ -92,24 +92,26 @@ class ExportBlocks():
 
     def export_block(self,blocknumber): 
 
-        print("export_block:",blocknumber) 
-        blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
-        print(blockrpc)
-        response = self.web3_provider_batch.make_request(json.dumps(blockrpc)) 
-        result = rpc_response_to_result(response) 
+        # print("export_block:",blocknumber) 
+        # blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
+        # print(blockrpc)
+        # response = self.web3_provider_batch.make_request(json.dumps(blockrpc)) 
+        # result = rpc_response_to_result(response) 
 
-        #导出区块
-        block = self.block_mapper.json_dict_to_block(result)
+        # #导出区块
+        # block = self.block_mapper.json_dict_to_block(result)
 
-        #交易hash列表
-        trans_hashes = self._export_block(block)
+        # #交易hash列表
+        # trans_hashes = self._export_block(block)
 
-        #导出token_transfer
-        self._export_token_transfers(blocknumber)
+        # #导出token_transfer
+        # self._export_token_transfers(blocknumber)
 
-        #导出receipt
-        contract_addresses = self._export_receipts(trans_hashes)
-        contract_addresses=list(set(contract_addresses))
+        # #导出receipt
+        # contract_addresses = self._export_receipts(trans_hashes)
+        # contract_addresses=list(set(contract_addresses))
+
+        contract_addresses = ['0x7ba9b94127d434182287de708643932ec036d365']
 
 
         #导出contracts
@@ -278,6 +280,8 @@ class ExportBlocks():
             # request id is the index of the contract address in contract_addresses list
             request_id = response['id']
             result = rpc_response_to_result(response)
+
+            print(result)
 
             contract_address = contract_addresses[request_id]
             contract = self._get_contract(contract_address, result)
