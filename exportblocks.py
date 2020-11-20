@@ -97,7 +97,7 @@ class ExportBlocks():
         # contract_addresses = ['0xa1edc78199a6e56fd52f69cf7c10f67ded15185d','0xea319e87cf06203dae107dd8e5672175e3ee976c','0x9d5155fbffd5bbb7555f13819a5b435b7befdcbd']
 
 
-        query = { "$or": { "from_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1", "to_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1" } }
+        query = { "$or": [{ "from_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1"}, {"to_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1"}] }
 
 
         col = self.db['token_transfer'].find(query,{"_id": 0, "token_address": 1}).distinct('token_address')
