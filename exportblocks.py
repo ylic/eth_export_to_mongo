@@ -222,6 +222,12 @@ class ExportBlocks():
     def _export_receipt(self, receipt):
         
         item = self.receipt_mapper.receipt_to_dict(receipt)
+
+        print(item)
+
+        return
+
+        
         ex = self.receipts_and_logs_item_exporter.get_export(item)
         result = ex.get_content(item)  
         
