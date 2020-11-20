@@ -209,22 +209,20 @@ class ExportBlocks():
 
         receipts_rpc = list(generate_get_receipt_json_rpc(transaction_hashes))
 
-        print(receipts_rpc)
+        # print(receipts_rpc)
 
-        return
-
-
+        # return
 
 
         response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
 
 
-        for result in results:
+        # for result in results:
 
-            print(result)
+        #     print(result)
 
-        return
+        # return
 
 
 
@@ -234,17 +232,24 @@ class ExportBlocks():
         contract_addresses =[]
         for receipt in receipts:
             ca = self._export_receipt(receipt)
+
+            print(ca)
+
+            return
+
+
+
             if(ca != None):
-                 contract_addresses.append(ca)
+                 contract_addresses + ca
         return contract_addresses
 
     def _export_receipt(self, receipt):
         
         item = self.receipt_mapper.receipt_to_dict(receipt)
 
-        print(item)
+        # print(item)
 
-        return
+        # return
 
     
         ex = self.receipts_and_logs_item_exporter.get_export(item)
@@ -252,7 +257,7 @@ class ExportBlocks():
 
         # print(item) 
 
-        return
+        # return
         
         try:
             self.db[ex.db_name].insert_one(result)
@@ -260,8 +265,10 @@ class ExportBlocks():
             # raise ValueError('Exporter for item insert_one')
             print('Exporter for export receipt insert_one')  
 
-        self._export_logs(receipt)
-        return item["contract-addresses"]
+        return self._export_logs(receipt)
+
+
+        # return item["contract-addresses"]
 
 
     
@@ -269,7 +276,9 @@ class ExportBlocks():
 
         print("_export_logs")
 
-        print(receipt.logs)
+        # print(receipt.logs)
+
+        contract_addresses = []
         
         logs = []
         for log in receipt.logs:
@@ -277,12 +286,15 @@ class ExportBlocks():
             ex   = self.receipts_and_logs_item_exporter.get_export(item)
             result = ex.get_content(item)  
             logs.append(result)
+            contract_addresses.append(result["address"])
         
         try:
             self.db[ex.db_name].insert_many(logs)
         except:
             # raise ValueError('Exporter for item insert_one')
-            print('Exporter for export logs insert_one')      
+            print('Exporter for export logs insert_one')
+
+        return  contract_addresses  
 
 
     def _export_contracts(self, contract_addresses):
