@@ -28,6 +28,9 @@ from web3 import Web3
 from ethereumetl.domain.token import EthToken
 from ethereumetl.erc20_abi import ERC20_ABI
 
+import logger
+
+
 
 class EthTokenService(object):
     def __init__(self, web3, function_call_result_transformer=None):
@@ -35,6 +38,10 @@ class EthTokenService(object):
         self._function_call_result_transformer = function_call_result_transformer
 
     def get_token(self, token_address):
+
+        logger.info(token_address)
+
+
         checksum_address = self._web3.toChecksumAddress(token_address)
         contract = self._web3.eth.contract(address=checksum_address, abi=ERC20_ABI)
 
