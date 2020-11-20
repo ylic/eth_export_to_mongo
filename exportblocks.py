@@ -300,6 +300,9 @@ class ExportBlocks():
         print('_export_contract') 
 
         item = self.contract_mapper.contract_to_dict(contract)
+
+        print('item',item)
+
         ex = self.contract_item_exporter.get_export(item)
         result = ex.get_content(item) 
 
