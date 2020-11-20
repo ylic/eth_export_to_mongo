@@ -114,6 +114,8 @@ class ExportBlocks():
 
         print(contract_addresses)
 
+        return
+
         #导出contracts
         self._export_contracts(contract_addresses)
 
@@ -232,13 +234,6 @@ class ExportBlocks():
         contract_addresses =[]
         for receipt in receipts:
             ca = self._export_receipt(receipt)
-
-            print(ca)
-
-            return
-
-
-
             if(ca != None):
                  contract_addresses + ca
         return contract_addresses
@@ -247,18 +242,9 @@ class ExportBlocks():
         
         item = self.receipt_mapper.receipt_to_dict(receipt)
 
-        # print(item)
-
-        # return
-
-    
         ex = self.receipts_and_logs_item_exporter.get_export(item)
         result = ex.get_content(item) 
 
-        # print(item) 
-
-        # return
-        
         try:
             self.db[ex.db_name].insert_one(result)
         except:
@@ -269,8 +255,6 @@ class ExportBlocks():
 
 
         # return item["contract-addresses"]
-
-
     
     def _export_logs(self,receipt):
 
