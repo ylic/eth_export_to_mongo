@@ -110,6 +110,12 @@ class ExportBlocks():
         #导出receipt
         contract_addresses = self._export_receipts(trans_hashes)
 
+        print(trans_hashes)
+
+        print(contract_addresses)
+
+        return
+
         #导出contracts
         self._export_contracts(contract_addresses)
 
