@@ -225,11 +225,13 @@ class ExportBlocks():
 
         print(item)
 
-        return
-
-        
+    
         ex = self.receipts_and_logs_item_exporter.get_export(item)
-        result = ex.get_content(item)  
+        result = ex.get_content(item) 
+
+        print(item) 
+
+        return
         
         try:
             self.db[ex.db_name].insert_one(result)
