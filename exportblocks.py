@@ -106,22 +106,13 @@ class ExportBlocks():
 
         print('trans_hashes',trans_hashes)
 
-        return
-
         #导出token_transfer
         self._export_token_transfers(blocknumber)
-
-
-        
 
         #导出receipt
         contract_addresses = self._export_receipts(trans_hashes)
 
-        print(trans_hashes)
-
         print(contract_addresses)
-
-        return
 
         #导出contracts
         self._export_contracts(contract_addresses)
@@ -162,10 +153,11 @@ class ExportBlocks():
 
         try:
             self.db[ex.db_name].insert_one(result)
-            return item["hash"]
         except:
             # raise ValueError('Exporter for item insert_one')  
-            print('Exporter for export transaction insert_one')      
+            print('Exporter for export transaction insert_one') 
+
+        return item["hash"]     
 
 
     def _export_token_transfers(self,blocknumber):
@@ -209,8 +201,6 @@ class ExportBlocks():
     def  _export_receipts(self,transaction_hashes):
         print("_export_receipts")
 
-        print(len(transaction_hashes))
-
         if transaction_hashes is None or len(transaction_hashes) == 0 : return []
 
         print('********************')
@@ -237,11 +227,14 @@ class ExportBlocks():
         
         try:
             self.db[ex.db_name].insert_one(result)
-            self._export_logs(receipt)
-            return item["contract-addresses"]
         except:
             # raise ValueError('Exporter for item insert_one')
             print('Exporter for export receipt insert_one')  
+
+        self._export_logs(receipt)
+        return item["contract-addresses"]
+
+
     
     def _export_logs(self,receipt):
 
