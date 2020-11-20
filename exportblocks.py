@@ -104,8 +104,6 @@ class ExportBlocks():
         block = self.block_mapper.json_dict_to_block(result)
         trans_hashes = self._export_block(block)
 
-        print( self.block_mapper.block_to_dict(block))
-
         #导出token_transfer
         self._export_token_transfers(blocknumber)
 
@@ -124,6 +122,8 @@ class ExportBlocks():
         item = self.block_mapper.block_to_dict(block)
         ex = self.block_item_exporter.get_export(item)
         result = ex.get_content(item)
+
+        print(result)
               
         try:
             self.db[ex.db_name].insert_one(result)
