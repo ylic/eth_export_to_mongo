@@ -25,8 +25,12 @@ from exporters.tokens_item_exporter import tokens_item_exporter
 
 from service.token_transfer_extractor import EthTokenTransferExtractor, TRANSFER_EVENT_TOPIC
 
-logger = logging.getLogger(__name__)
-logger.setLevel(level = logging.DEBUG)
+logger = logging.getLogger()    # initialize logging class
+logger.setLevel(logging.DEBUG)  # default log level
+format = logging.Formatter("%(asctime)s - %(message)s")    # output format 
+sh = logging.StreamHandler(stream=sys.stdout)    # output to standard output
+sh.setFormatter(format)
+logger.addHandler(sh)
 
 class ExportBlocks():
     
