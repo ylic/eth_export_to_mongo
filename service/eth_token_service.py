@@ -45,6 +45,8 @@ class EthTokenService(object):
         checksum_address = self._web3.toChecksumAddress(token_address)
         contract = self._web3.eth.contract(address=checksum_address, abi=ERC20_ABI)
 
+        logger.info('#######')
+
         symbol = self._call_contract_function(contract.functions.symbol())
         name = self._call_contract_function(contract.functions.name())
         decimals = self._call_contract_function(contract.functions.decimals())
