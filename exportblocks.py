@@ -1,5 +1,5 @@
 import json
-import logging
+import logging,sys
 from utils.json_rpc_requests import generate_get_block_by_number_json_rpc
 from utils.utils import rpc_response_to_result
 from mappers.block_mapper import EthBlockMapper
