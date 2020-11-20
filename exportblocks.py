@@ -90,6 +90,10 @@ class ExportBlocks():
 
     def export_block(self,blocknumber): 
 
+        self._export_contracts(['0x649ebf73043ffcc70a59855ecd8a568fd996415a'])
+
+        return
+
         print("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
         print(blockrpc)
