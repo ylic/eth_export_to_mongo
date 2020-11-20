@@ -300,7 +300,7 @@ class ExportBlocks():
 
         col = self.db['contract'].find(query,{"_id": 0, "address": 1})
 
-        exist_contracts = list(map(lambda item:item['address'],col)))
+        exist_contracts = list(map(lambda item:item['address'],col))
 
         contract_addresses = [item for item in contract_addresses if item not in exist_contracts]
 
