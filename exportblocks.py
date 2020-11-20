@@ -194,7 +194,7 @@ class ExportBlocks():
     def  _export_receipts(self,transaction_hashes):
         print("_export_receipts")
 
-        if len(transaction_hashes) == 0 : return []
+        if len(transaction_hashes) == 0 || transaction_hashes == None : return []
 
         receipts_rpc = list(generate_get_receipt_json_rpc(transaction_hashes))
         response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
@@ -242,7 +242,7 @@ class ExportBlocks():
 
     def _export_contracts(self, contract_addresses):
 
-        if len(contract_addresses) == 0 : return
+        if len(contract_addresses) == 0 || contract_addresses == None: return
 
         contracts_code_rpc = list(generate_get_code_json_rpc(contract_addresses))
         response_batch = self.web3_provider_batch.make_request(json.dumps(contracts_code_rpc))
