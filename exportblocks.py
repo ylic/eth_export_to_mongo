@@ -303,6 +303,8 @@ class ExportBlocks():
         ex = self.contract_item_exporter.get_export(item)
         result = ex.get_content(item) 
 
+        print('result',result)
+
         try:
             self.db[ex.db_name].insert_one(result)
         except:
