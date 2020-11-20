@@ -85,7 +85,7 @@ class ExportBlocks():
 
     #导出block
     def start(self):
-        if self.debug : logger.log("ExportBlocks start")
+        if self.debug : logger.info("ExportBlocks start")
 
         while(self.cur_block <= self.end_block) :
            self.export_block(self.cur_block)
@@ -123,9 +123,9 @@ class ExportBlocks():
 
         # return
 
-        if self.debug : logger.log("export_block:",blocknumber) 
+        if self.debug : logger.info("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
-        if self.debug : logger.log(blockrpc)
+        if self.debug : logger.info(blockrpc)
         response = self.web3_provider_batch.make_request(json.dumps(blockrpc)) 
         result = rpc_response_to_result(response) 
 
@@ -151,7 +151,7 @@ class ExportBlocks():
      
     def _export_block(self, block):
     
-        if self.debug : logger.log("_export_block") 
+        if self.debug : logger.info("_export_block") 
         item = self.block_mapper.block_to_dict(block)
         ex = self.block_item_exporter.get_export(item)
         result = ex.get_content(item)
@@ -167,7 +167,7 @@ class ExportBlocks():
 
     def _export_transactions(self,block):
     
-        if self.debug : logger.log("_export_transaction")
+        if self.debug : logger.info("_export_transaction")
         transaction_hash = []
 
         for tx in block.transactions:
