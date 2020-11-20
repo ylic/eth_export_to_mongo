@@ -296,9 +296,9 @@ class ExportBlocks():
 
         #数据库去重
 
-        query = { "address": { "$in": contract_addresses } , {"_id": 0, "address": 1} }
+        # query = { "address": { "$in": contract_addresses } , {"_id": 0, "address": 1} }
 
-        col = self.db['contract'].find(query)
+        # col = self.db['contract'].find(query)
 
 
 
