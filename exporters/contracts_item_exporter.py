@@ -23,13 +23,21 @@
 
 from exporters.composite_item_exporter import CompositeItemExporter
 
+# FIELDS_TO_EXPORT = [
+#     'address',
+#     'bytecode',
+#     'function_sighashes',
+#     'is_erc20',
+#     'is_erc721'
+# ]
+
 FIELDS_TO_EXPORT = [
     'address',
-    'bytecode',
     'function_sighashes',
     'is_erc20',
     'is_erc721'
 ]
+
 
 
 def contracts_item_exporter():

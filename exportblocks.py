@@ -90,12 +90,6 @@ class ExportBlocks():
 
     def export_block(self,blocknumber): 
 
-        self._export_tokens(['0xdac17f958d2ee523a2206206994597c13d831ec7'])
-
-        return
-
-
-
         print("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
         print(blockrpc)
@@ -329,7 +323,7 @@ class ExportBlocks():
 
     def _export_tokens(self, token_addresses):
 
-
+        print('token_addresses',token_addresses)
 
         for token_address in token_addresses:
             self._export_token(token_address)
