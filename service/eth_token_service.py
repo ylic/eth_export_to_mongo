@@ -86,4 +86,5 @@ def call_contract_function(func, ignore_errors, default_value=None):
         if type(ex) in ignore_errors:
             return default_value
         else:
+            logger.error(ex)
             raise ex
