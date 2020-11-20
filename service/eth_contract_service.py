@@ -36,6 +36,11 @@ class EthContractService:
                 init_block = basic_blocks[0]
                 instructions = init_block.instructions
 
+
+                print(bytecode[-10:-1])
+
+                return []
+
                 try:
                     push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
                 except:
