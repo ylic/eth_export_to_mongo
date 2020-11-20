@@ -31,11 +31,11 @@ from ethereumetl.erc20_abi import ERC20_ABI
 
 class EthTokenService(object):
     def __init__(self, web3, function_call_result_transformer=None):
-        self._web3 = web3
+        self._web3 = Web3(web3)
         self._function_call_result_transformer = function_call_result_transformer
 
     def get_token(self, token_address):
-        checksum_address = Web3.toChecksumAddress(token_address)
+        checksum_address = self._web3.toChecksumAddress(token_address)
         contract = self._web3.eth.contract(address=checksum_address, abi=ERC20_ABI)
 
         symbol = self._call_contract_function(contract.functions.symbol())
