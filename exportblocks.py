@@ -210,6 +210,12 @@ class ExportBlocks():
         receipts_rpc = list(generate_get_receipt_json_rpc(transaction_hashes))
         response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
+
+        print(results)
+
+
+
+
         receipts = [self.receipt_mapper.json_dict_to_receipt(result) for result in results]
         
         contract_addresses =[]
@@ -225,11 +231,13 @@ class ExportBlocks():
 
         print(item)
 
+        return
+
     
         ex = self.receipts_and_logs_item_exporter.get_export(item)
         result = ex.get_content(item) 
 
-        print(item) 
+        # print(item) 
 
         return
         
