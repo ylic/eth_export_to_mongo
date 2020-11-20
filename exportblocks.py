@@ -79,7 +79,7 @@ class ExportBlocks():
         self.tokens_item_exporter = tokens_item_exporter()
         self.tokens_item_exporter.open()
 
-        self.debug = False
+        self.debug = True
 
         if self.debug : logger.info("ExportBlocks __init__")
 
@@ -91,6 +91,7 @@ class ExportBlocks():
             print("cur_block",self.cur_block)
             self.export_block(self.cur_block)
             self.cur_block  = self.cur_block  + 1
+            
            
          
 
