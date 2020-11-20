@@ -101,10 +101,8 @@ class ExportBlocks():
 
         col = self.db['contract'].find(query,{"_id": 0, "address": 1})
 
-        
-
-
-        print(col)
+        for x in col:
+            print(x)
 
         return
 
