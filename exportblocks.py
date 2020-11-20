@@ -97,16 +97,17 @@ class ExportBlocks():
         # contract_addresses = ['0xa1edc78199a6e56fd52f69cf7c10f67ded15185d','0xea319e87cf06203dae107dd8e5672175e3ee976c','0x9d5155fbffd5bbb7555f13819a5b435b7befdcbd']
 
 
-        # query = { "address": { "$in": contract_addresses } }
+        query = { "$or": { "from_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1", "to_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1" } }
 
-        # col = self.db['contract'].find(query,{"_id": 0, "address": 1})
 
-        # print(list(map(lambda item:item['address'],col)))
+        col = self.db['token_transfer'].find(query,{"_id": 0, "token_address": 1}).distinct('token_address')
+
+        print(list(map(lambda item:item['token_address'],col)))
 
         # # for x in col:
         # #     print(x)
 
-        # return
+        return
 
 
 
@@ -205,19 +206,21 @@ class ExportBlocks():
 
     def _export_token_transfer(self,token_transfer):
         
-        if token_transfer is not None:
-            item = self.token_transfer_mapper.token_transfer_to_dict(token_transfer)
-            ex = self.token_transfer_item_exporter.get_export(item)
-            result = ex.get_content(item)
+        if token_transfer is None: return
 
-            if(item["token_address"] not in self.tokens):
-                self.tokens.append(item["token_address"])  
+        item = self.token_transfer_mapper.token_transfer_to_dict(token_transfer)
+        ex = self.token_transfer_item_exporter.get_export(item)
+        result = ex.get_content(item)
 
-            try:
-                self.db[ex.db_name].insert_one(result)
-            except:
-                # raise ValueError('Exporter for item insert_one')
-                print('Exporter for export token transfer insert_one')                                 
+        if(item["token_address"] not in self.tokens):
+            self.tokens.append(item["token_address"])  
+
+        try:
+            self.db[ex.db_name].insert_one(result)
+        except:
+            # raise ValueError('Exporter for item insert_one')
+            print('Exporter for export token transfer insert_one')  
+
 
     def  _export_receipts(self,transaction_hashes):
         print("_export_receipts")
@@ -304,12 +307,9 @@ class ExportBlocks():
 
         contract_addresses = [item for item in contract_addresses if item not in exist_contracts]
 
-        print(contract_addresses)
-
-
-        return
-
         if len(contract_addresses) == 0: return
+
+
 
         contracts_code_rpc = list(generate_get_code_json_rpc(contract_addresses))
         response_batch = self.web3_provider_batch.make_request(json.dumps(contracts_code_rpc))
@@ -367,7 +367,17 @@ class ExportBlocks():
 
     def _export_tokens(self, token_addresses):
 
-        print('token_addresses',token_addresses)
+        # print('token_addresses',token_addresses)
+
+        #数据库去重
+
+        query = { "address": { "$in": contract_addresses } }
+
+        col = self.db['token'].find(query,{"_id": 0, "address": 1})
+
+        exist_token_addresses = list(map(lambda item:item['address'],col))
+
+        token_addresses = [item for item in token_addresses if item not in exist_token_addresses]
 
         for token_address in token_addresses:
             self._export_token(token_address)
