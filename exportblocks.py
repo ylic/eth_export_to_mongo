@@ -274,7 +274,8 @@ class ExportBlocks():
         
         try:
             self.db[ex.db_name].insert_many(logs)
-        except:
+        except Exception as e:
+            print(e)
             # raise ValueError('Exporter for item insert_one')
             print('Exporter for export logs insert_one')
 
