@@ -101,7 +101,7 @@ class ExportBlocks():
 
         col = list(self.db['contract'].find(query,{"_id": 0, "address": 1}))
 
-        print(list(map(lambda item:item.address,col)))
+        print(list(map(lambda item:item['address'],col)))
 
         # for x in col:
         #     print(x)
