@@ -27,7 +27,7 @@ from service.token_transfer_extractor import EthTokenTransferExtractor, TRANSFER
 
 logger = logging.getLogger()    # initialize logging class
 logger.setLevel(logging.DEBUG)  # default log level
-format = logging.Formatter("%(asctime)s - %(message)s")    # output format 
+format = logging.Formatter("%(asctime)s -  %(filename)s - %(module)s - %(funcName)s - %(lineno)d - %(message)s")    # output format 
 sh = logging.StreamHandler(stream=sys.stdout)    # output to standard output
 sh.setFormatter(format)
 logger.addHandler(sh)
