@@ -90,9 +90,8 @@ class ExportBlocks():
 
     def export_block(self,blocknumber): 
 
-        self._export_contracts(['0x649ebf73043ffcc70a59855ecd8a568fd996415a'])
-
-        return
+        # self._export_contracts(['0x649ebf73043ffcc70a59855ecd8a568fd996415a'])
+        # return
 
         print("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
@@ -113,15 +112,11 @@ class ExportBlocks():
         contract_addresses = self._export_receipts(trans_hashes)
         contract_addresses=list(set(contract_addresses))
 
-        # contract_addresses = ['0x7ba9b94127d434182287de708643932ec036d365']
-        # contract_addresses = ['0xdac17f958d2ee523a2206206994597c13d831ec7']
-
-
         #导出contracts
         self._export_contracts(contract_addresses)
 
         #导出tokens
-        # self._export_tokens(self.tokens)
+        self._export_tokens(self.tokens)
 
      
     def _export_block(self, block):

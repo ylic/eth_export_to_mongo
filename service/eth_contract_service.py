@@ -29,37 +29,13 @@ class EthContractService:
     def get_function_sighashes(self, bytecode):
         bytecode = clean_bytecode(bytecode)
         if bytecode is not None:
-            print(1)
             evm_code = EvmCode(contract=Contract(bytecode=bytecode), debug=True, static_analysis=False, dynamic_analysis=False)
-            print(2)
             evm_code.disassemble(bytecode)
-            print(3)
             basic_blocks = evm_code.basicblocks
-            print(4)
             if basic_blocks and len(basic_blocks) > 0:
                 init_block = basic_blocks[0]
                 instructions = init_block.instructions
-
-
-                # print(bytecode[-10:-1])
-
-                # return []
-
-                try:
-                    push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
-                except:
-                    pass
-
-                print(bytecode[-10:-1],push4_instructions)
-
-                # push4_instructions = []
-
-                # for inst in instructions:
-                    # print(bytecode[0:10],'*********')
-                    # print(inst)
-                    # if  inst.name == 'PUSH4':
-                        # push4_instructions.append(inst)
-                # push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
+                push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
                 return sorted(list(set('0x' + inst.operand for inst in push4_instructions)))
             else:
                 return []
