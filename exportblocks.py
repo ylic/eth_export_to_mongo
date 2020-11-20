@@ -102,10 +102,10 @@ class ExportBlocks():
 
         col = self.db['token_transfer'].find(query,{"_id": 0, "token_address": 1}).distinct('token_address')
 
-        print(list(map(lambda item:item['token_address'],col)))
+        # print(list(map(lambda item:item['token_address'],col)))
 
-        # # for x in col:
-        # #     print(x)
+        for x in col:
+            print(x)
 
         return
 
