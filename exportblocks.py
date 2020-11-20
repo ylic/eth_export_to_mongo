@@ -287,7 +287,7 @@ class ExportBlocks():
             contract = self._get_contract(contract_address, result)
 
             print(contract)
-            
+
             contracts.append(contract)
 
         for contract in contracts:
@@ -300,6 +300,8 @@ class ExportBlocks():
         item = self.contract_mapper.contract_to_dict(contract)
         ex = self.contract_item_exporter.get_export(item)
         result = ex.get_content(item) 
+
+        print(result)
 
         try:
             self.db[ex.db_name].insert_one(result)
