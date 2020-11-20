@@ -93,6 +93,24 @@ class ExportBlocks():
         # self._export_contracts(['0x649ebf73043ffcc70a59855ecd8a568fd996415a'])
         # return
 
+
+        contract_addresses = ['0xa1edc78199a6e56fd52f69cf7c10f67ded15185d','0xea319e87cf06203dae107dd8e5672175e3ee976c','0x9d5155fbffd5bbb7555f13819a5b435b7befdcbd']
+
+
+        query = { "address": { "$in": contract_addresses } , {"_id": 0, "address": 1} }
+
+        col = self.db['contract'].find(query)
+
+
+        print(col)
+
+        return
+
+
+
+
+
+
         print("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
         print(blockrpc)
@@ -272,6 +290,19 @@ class ExportBlocks():
     def _export_contracts(self, contract_addresses):
 
         if contract_addresses == None or len(contract_addresses) == 0: return
+
+
+        #数据库去重
+
+        query = { "address": { "$in": contract_addresses } , {"_id": 0, "address": 1} }
+
+        col = self.db['contract'].find(query)
+
+
+
+
+
+
 
         contracts_code_rpc = list(generate_get_code_json_rpc(contract_addresses))
         response_batch = self.web3_provider_batch.make_request(json.dumps(contracts_code_rpc))
