@@ -35,6 +35,11 @@ class EthContractService:
             if basic_blocks and len(basic_blocks) > 0:
                 init_block = basic_blocks[0]
                 instructions = init_block.instructions
+
+                for inst in instructions:
+                    print(inst)
+
+
                 push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
                 return sorted(list(set('0x' + inst.operand for inst in push4_instructions)))
             else:
