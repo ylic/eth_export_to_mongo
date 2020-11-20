@@ -117,7 +117,7 @@ class ExportBlocks():
         self._export_contracts(contract_addresses)
 
         #导出tokens
-        self._export_tokens(self.tokens)
+        # self._export_tokens(self.tokens)
 
      
     def _export_block(self, block):
@@ -292,7 +292,7 @@ class ExportBlocks():
 
             contracts.append(contract)
 
-            break
+            # break
 
         for contract in contracts:
             self._export_contract(contract)
