@@ -143,7 +143,7 @@ class ExportBlocks():
         contract_addresses=list(set(contract_addresses))
 
         #导出contracts
-        self._export_contracts(contract_addresses)
+        # self._export_contracts(contract_addresses)
 
         #导出tokens
         self._export_tokens(self.tokens)
