@@ -97,22 +97,26 @@ class ExportBlocks():
         # contract_addresses = ['0xa1edc78199a6e56fd52f69cf7c10f67ded15185d','0xea319e87cf06203dae107dd8e5672175e3ee976c','0x9d5155fbffd5bbb7555f13819a5b435b7befdcbd']
 
 
-        query = { "$or": [{ "from_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1"}, {"to_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1"}] }
+        # query = { "$or": [{ "from_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1"}, {"to_address": "0x3f899a9b7caf7d0e72023e2f477531ffb7dc9bf1"}] }
 
 
-        col = self.db['token_transfer'].find(query,{"_id": 0, "token_address": 1}).distinct('token_address')
+        # col = self.db['token_transfer'].find(query,{"_id": 0, "token_address": 1}).distinct('token_address')
 
-        print(list(col))
+        # print(list(col))
 
         # for x in col:
         #     print(x)
 
-        return
 
+        # self.db['block'].remove()
+        # self.db['contract'].remove()
+        # self.db['log'].remove()
+        # self.db['receipt'].remove()
+        # self.db['token'].remove()
+        # self.db['token_transfer'].remove()
+        # self.db['transaction'].remove()
 
-
-
-
+        # return
 
         print("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
@@ -227,16 +231,7 @@ class ExportBlocks():
 
         if transaction_hashes is None or len(transaction_hashes) == 0 : return []
 
-        print('********************')
-
-
-
         receipts_rpc = list(generate_get_receipt_json_rpc(transaction_hashes))
-
-        # print(receipts_rpc)
-
-        # return
-
 
         response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
