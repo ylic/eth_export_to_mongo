@@ -304,6 +304,10 @@ class ExportBlocks():
         print('item',item)
 
         ex = self.contract_item_exporter.get_export(item)
+
+        print(ex)
+
+
         result = ex.get_content(item) 
 
         print('result',result)
