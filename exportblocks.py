@@ -211,7 +211,12 @@ class ExportBlocks():
         response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
 
-        print(results)
+
+        for result in results:
+
+            print(result)
+
+        return
 
 
 
