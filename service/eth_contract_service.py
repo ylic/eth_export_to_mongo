@@ -44,8 +44,9 @@ class EthContractService:
                 push4_instructions = []
 
                 for inst in instructions:
-                    print(bytecode[0,10],'*********')
                     try:
+                        print(bytecode[0,10],'*********')
+                        print(inst)
                         if  inst.name == 'PUSH4':
                             push4_instructions.append(inst)
                     except:
