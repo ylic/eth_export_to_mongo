@@ -285,6 +285,9 @@ class ExportBlocks():
 
             contract_address = contract_addresses[request_id]
             contract = self._get_contract(contract_address, result)
+
+            print(contract)
+            
             contracts.append(contract)
 
         for contract in contracts:
