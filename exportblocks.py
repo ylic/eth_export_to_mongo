@@ -240,7 +240,7 @@ class ExportBlocks():
 
         print("_export_logs")
 
-        print(receipt)
+        print(receipt.logs)
         
         logs = []
         for log in receipt.logs:
