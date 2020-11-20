@@ -41,9 +41,9 @@ class EthContractService:
                 instructions = init_block.instructions
 
 
-                print(bytecode[-10:-1])
+                # print(bytecode[-10:-1])
 
-                return []
+                # return []
 
                 try:
                     push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
