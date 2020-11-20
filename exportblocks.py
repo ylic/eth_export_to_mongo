@@ -1,4 +1,5 @@
 import json
+import logging
 from utils.json_rpc_requests import generate_get_block_by_number_json_rpc
 from utils.utils import rpc_response_to_result
 from mappers.block_mapper import EthBlockMapper
@@ -23,6 +24,8 @@ from exporters.contracts_item_exporter import contracts_item_exporter
 from exporters.tokens_item_exporter import tokens_item_exporter
 
 from service.token_transfer_extractor import EthTokenTransferExtractor, TRANSFER_EVENT_TOPIC
+
+logger = logging.getLogger(__name__)
 
 class ExportBlocks():
     
@@ -76,11 +79,13 @@ class ExportBlocks():
         self.tokens_item_exporter = tokens_item_exporter()
         self.tokens_item_exporter.open()
 
-        print("ExportBlocks __init__")
+        self.debug = False
+
+        if self.debug : logger.info("ExportBlocks __init__")
 
     #导出block
     def start(self):
-        print("ExportBlocks start")
+        if self.debug : logger.log("ExportBlocks start")
 
         while(self.cur_block <= self.end_block) :
            self.export_block(self.cur_block)
@@ -118,9 +123,9 @@ class ExportBlocks():
 
         # return
 
-        print("export_block:",blocknumber) 
+        if self.debug : logger.log("export_block:",blocknumber) 
         blockrpc = generate_get_block_by_number_json_rpc(blocknumber,True)
-        print(blockrpc)
+        if self.debug : logger.log(blockrpc)
         response = self.web3_provider_batch.make_request(json.dumps(blockrpc)) 
         result = rpc_response_to_result(response) 
 
@@ -146,7 +151,7 @@ class ExportBlocks():
      
     def _export_block(self, block):
     
-        print("_export_block") 
+        if self.debug : logger.log("_export_block") 
         item = self.block_mapper.block_to_dict(block)
         ex = self.block_item_exporter.get_export(item)
         result = ex.get_content(item)
@@ -155,14 +160,14 @@ class ExportBlocks():
             self.db[ex.db_name].insert_one(result)
         except:
             # raise ValueError('Exporter for item insert_one')
-            print('Exporter for export block insert_one')
+            if self.debug : logger.error('Exporter for export block insert_one')
 
         return self._export_transactions(block)
 
 
     def _export_transactions(self,block):
     
-        print("_export_transaction")
+        if self.debug : logger.log("_export_transaction")
         transaction_hash = []
 
         for tx in block.transactions:
@@ -181,13 +186,13 @@ class ExportBlocks():
             self.db[ex.db_name].insert_one(result)
         except:
             # raise ValueError('Exporter for item insert_one')  
-            print('Exporter for export transaction insert_one') 
+            if self.debug : logger.error('Exporter for export transaction insert_one') 
 
         return item["hash"]     
 
 
     def _export_token_transfers(self,blocknumber):
-        print("_export_token_transfer") 
+        if self.debug : logger.info("_export_token_transfer") 
 
         filter_params = {
             'fromBlock': blocknumber,
@@ -223,11 +228,11 @@ class ExportBlocks():
             self.db[ex.db_name].insert_one(result)
         except:
             # raise ValueError('Exporter for item insert_one')
-            print('Exporter for export token transfer insert_one')  
+            if self.debug : logger.error('Exporter for export token transfer insert_one')  
 
 
     def  _export_receipts(self,transaction_hashes):
-        print("_export_receipts")
+        if self.debug : logger.info("_export_receipts")
 
         if transaction_hashes is None or len(transaction_hashes) == 0 : return []
 
@@ -256,7 +261,7 @@ class ExportBlocks():
             self.db[ex.db_name].insert_one(result)
         except:
             # raise ValueError('Exporter for item insert_one')
-            print('Exporter for export receipt insert_one')  
+            if self.debug : logger.error('Exporter for export receipt insert_one')  
 
         return self._export_logs(receipt)
 
@@ -265,7 +270,7 @@ class ExportBlocks():
     
     def _export_logs(self,receipt):
 
-        print("_export_logs")
+        if self.debug : logger.info("_export_logs")
 
         contract_addresses = []
         
@@ -282,7 +287,7 @@ class ExportBlocks():
                 self.db[ex.db_name].insert_many(logs)
         except Exception as e:
             # raise ValueError('Exporter for item insert_one')
-            print('Exporter for export logs insert_one')
+            if self.debug : logger.error('Exporter for export logs insert_one')
 
         return  contract_addresses  
 
@@ -317,9 +322,6 @@ class ExportBlocks():
 
             contract_address = contract_addresses[request_id]
 
-            print('contract_address',contract_address)
-
-
             contract = self._get_contract(contract_address, result)
 
             contracts.append(contract)
@@ -333,7 +335,7 @@ class ExportBlocks():
     
     def _export_contract(self,contract):
 
-        print('_export_contract') 
+        if self.debug : logger.info('_export_contract') 
 
         item = self.contract_mapper.contract_to_dict(contract)
 
@@ -345,7 +347,7 @@ class ExportBlocks():
             self.db[ex.db_name].insert_one(result)
         except:
             # raise ValueError('Exporter for item insert_one') 
-            print('Exporter for export contract insert_one')    
+            if self.debug : logger.error('Exporter for export contract insert_one')    
             
 
     def _get_contract(self, contract_address, rpc_result):
@@ -379,7 +381,7 @@ class ExportBlocks():
 
     def _export_token(self, token_address):
 
-        print('_export_token')
+        if self.debug : logger.info('_export_token')
 
         token = self.token_service.get_token(token_address)
         item = self.token_mapper.token_to_dict(token)
@@ -391,7 +393,7 @@ class ExportBlocks():
             self.db[ex.db_name].insert_one(result)
         except:
             # raise ValueError('Exporter for item insert_one')
-            print('Exporter for export token insert_one')
+            if self.debug : logger.error('Exporter for export token insert_one')
 
     
 ASCII_0 = 0
