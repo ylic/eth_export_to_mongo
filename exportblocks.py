@@ -202,6 +202,10 @@ class ExportBlocks():
 
         if transaction_hashes == None or len(transaction_hashes) == 0 : return []
 
+        print('********************')
+
+
+
         receipts_rpc = list(generate_get_receipt_json_rpc(transaction_hashes))
         response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
