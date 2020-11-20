@@ -112,6 +112,8 @@ class ExportBlocks():
         #导出receipt
         contract_addresses = self._export_receipts(trans_hashes)
 
+        contract_addresses=list(set(contract_addresses))
+
         print(contract_addresses)
 
         return
@@ -263,9 +265,7 @@ class ExportBlocks():
         try:
             if len(logs) > 0:
                 self.db[ex.db_name].insert_many(logs)
-                # self.db['log'].insert_many(logs)
         except Exception as e:
-            print(e)
             # raise ValueError('Exporter for item insert_one')
             print('Exporter for export logs insert_one')
 
