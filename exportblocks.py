@@ -234,7 +234,7 @@ class ExportBlocks():
         contract_addresses =[]
         for receipt in receipts:
             ca = self._export_receipt(receipt)
-            if(ca != None):
+            if(ca != None and len(ca) > 0):
                  contract_addresses + ca
         return contract_addresses
 
