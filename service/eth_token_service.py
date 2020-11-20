@@ -23,6 +23,8 @@
 
 from web3.exceptions import BadFunctionCallOutput
 
+from web3 import Web3
+
 from ethereumetl.domain.token import EthToken
 from ethereumetl.erc20_abi import ERC20_ABI
 
@@ -33,7 +35,7 @@ class EthTokenService(object):
         self._function_call_result_transformer = function_call_result_transformer
 
     def get_token(self, token_address):
-        checksum_address = self._web3.toChecksumAddress(token_address)
+        checksum_address = Web3.toChecksumAddress(token_address)
         contract = self._web3.eth.contract(address=checksum_address, abi=ERC20_ABI)
 
         symbol = self._call_contract_function(contract.functions.symbol())
