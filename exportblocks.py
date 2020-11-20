@@ -271,7 +271,7 @@ class ExportBlocks():
             result = ex.get_content(item)  
             logs.append(result)
             contract_addresses.append(result["address"])
-        print(ex)
+        print(ex,ex.db_name)
         try:
             self.db[ex.db_name].insert_many(logs)
         except Exception as e:
