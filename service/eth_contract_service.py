@@ -30,7 +30,7 @@ class EthContractService:
         bytecode = clean_bytecode(bytecode)
         if bytecode is not None:
             print(1)
-            evm_code = EvmCode(contract=Contract(bytecode=bytecode), static_analysis=False, dynamic_analysis=False)
+            evm_code = EvmCode(contract=Contract(bytecode=bytecode), debug=True static_analysis=False, dynamic_analysis=False)
             print(2)
             evm_code.disassemble(bytecode)
             print(3)
