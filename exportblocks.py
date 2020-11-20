@@ -99,10 +99,12 @@ class ExportBlocks():
 
         query = { "address": { "$in": contract_addresses } }
 
-        col = self.db['contract'].find(query,{"_id": 0, "address": 1})
+        col = list(self.db['contract'].find(query,{"_id": 0, "address": 1}))
 
-        for x in col:
-            print(x)
+        print(map(lambda item:item.address,col))
+
+        # for x in col:
+        #     print(x)
 
         return
 
