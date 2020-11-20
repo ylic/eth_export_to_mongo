@@ -105,6 +105,10 @@ class ExportBlocks():
         # self._export_contracts(['0x649ebf73043ffcc70a59855ecd8a568fd996415a'])
         # return
 
+        self._export_token(self, '0x06012c8cf97bead5deae237070f9587f8e7a266d')
+
+        return
+
 
         # contract_addresses = ['0xa1edc78199a6e56fd52f69cf7c10f67ded15185d','0xea319e87cf06203dae107dd8e5672175e3ee976c','0x9d5155fbffd5bbb7555f13819a5b435b7befdcbd']
 

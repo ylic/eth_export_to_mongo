@@ -57,6 +57,8 @@ class EthTokenService(object):
         token.decimals = decimals
         token.total_supply = total_supply
 
+        if token_address == '0x06012c8cf97bead5deae237070f9587f8e7a266d' : logger.info(token)
+
         return token
 
     def _call_contract_function(self, func):
