@@ -29,9 +29,13 @@ class EthContractService:
     def get_function_sighashes(self, bytecode):
         bytecode = clean_bytecode(bytecode)
         if bytecode is not None:
+            print(1)
             evm_code = EvmCode(contract=Contract(bytecode=bytecode), static_analysis=False, dynamic_analysis=False)
+            print(2)
             evm_code.disassemble(bytecode)
+            print(3)
             basic_blocks = evm_code.basicblocks
+            print(4)
             if basic_blocks and len(basic_blocks) > 0:
                 init_block = basic_blocks[0]
                 instructions = init_block.instructions
