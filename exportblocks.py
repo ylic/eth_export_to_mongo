@@ -107,6 +107,9 @@ class ExportBlocks():
         #导出token_transfer
         self._export_token_transfers(blocknumber)
 
+
+        print('trans_hashes',trans_hashes)
+
         #导出receipt
         contract_addresses = self._export_receipts(trans_hashes)
 
