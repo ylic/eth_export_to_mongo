@@ -28,9 +28,9 @@ from web3 import Web3
 from ethereumetl.domain.token import EthToken
 from ethereumetl.erc20_abi import ERC20_ABI
 
-import logger
+import logging
 
-
+logger = logging.getLogger()
 
 class EthTokenService(object):
     def __init__(self, web3, function_call_result_transformer=None):
