@@ -284,6 +284,10 @@ class ExportBlocks():
             result = rpc_response_to_result(response)
 
             contract_address = contract_addresses[request_id]
+
+            print('contract_address',contract_address)
+
+
             contract = self._get_contract(contract_address, result)
 
             contracts.append(contract)
