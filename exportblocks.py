@@ -219,22 +219,11 @@ class ExportBlocks():
         response = self.web3_provider_batch.make_request(json.dumps(receipts_rpc))
         results = rpc_response_batch_to_results(response)
 
-
-        # for result in results:
-
-        #     print(result)
-
-        # return
-
-
-
-
         receipts = [self.receipt_mapper.json_dict_to_receipt(result) for result in results]
         
         contract_addresses = []
         for receipt in receipts:
             ca = self._export_receipt(receipt)
-            print(ca)
             if(ca != None and len(ca) > 0):
                  contract_addresses = contract_addresses + ca
         return contract_addresses
@@ -261,8 +250,6 @@ class ExportBlocks():
 
         print("_export_logs")
 
-        # print(receipt.logs)
-
         contract_addresses = []
         
         logs = []
@@ -275,8 +262,8 @@ class ExportBlocks():
         # print(ex,ex.db_name)
         try:
             if len(logs) > 0:
-                # self.db[ex.db_name].insert_many(logs)
-                self.db['log'].insert_many(logs)
+                self.db[ex.db_name].insert_many(logs)
+                # self.db['log'].insert_many(logs)
         except Exception as e:
             print(e)
             # raise ValueError('Exporter for item insert_one')
