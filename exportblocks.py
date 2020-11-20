@@ -111,7 +111,9 @@ class ExportBlocks():
         # contract_addresses = self._export_receipts(trans_hashes)
         # contract_addresses=list(set(contract_addresses))
 
-        contract_addresses = ['0x7ba9b94127d434182287de708643932ec036d365']
+        # contract_addresses = ['0x7ba9b94127d434182287de708643932ec036d365']
+
+        contract_addresses = ['0xdac17f958d2ee523a2206206994597c13d831ec7']
 
 
         #导出contracts
