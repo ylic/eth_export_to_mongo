@@ -239,6 +239,8 @@ class ExportBlocks():
     def _export_logs(self,receipt):
 
         print("_export_logs")
+
+        print(receipt)
         
         logs = []
         for log in receipt.logs:
