@@ -104,19 +104,13 @@ class ExportBlocks():
         #交易hash列表
         trans_hashes = self._export_block(block)
 
-        # print('trans_hashes',trans_hashes)
-
         #导出token_transfer
         self._export_token_transfers(blocknumber)
 
         #导出receipt
         contract_addresses = self._export_receipts(trans_hashes)
-
         contract_addresses=list(set(contract_addresses))
 
-        print(contract_addresses)
-
-        return
 
         #导出contracts
         self._export_contracts(contract_addresses)
