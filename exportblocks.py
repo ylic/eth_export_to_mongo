@@ -97,9 +97,9 @@ class ExportBlocks():
         contract_addresses = ['0xa1edc78199a6e56fd52f69cf7c10f67ded15185d','0xea319e87cf06203dae107dd8e5672175e3ee976c','0x9d5155fbffd5bbb7555f13819a5b435b7befdcbd']
 
 
-        query = { "address": { "$in": contract_addresses } , {"_id": 0, "address": 1} }
+        query = { "address": { "$in": contract_addresses } }
 
-        col = self.db['contract'].find(query)
+        col = self.db['contract'].find(query,{"_id": 0, "address": 1})
 
 
         print(col)
