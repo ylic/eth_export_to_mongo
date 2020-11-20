@@ -366,7 +366,7 @@ class ExportBlocks():
 
         #数据库去重
 
-        query = { "address": { "$in": contract_addresses } }
+        query = { "address": { "$in": token_addresses } }
 
         col = self.db['token'].find(query,{"_id": 0, "address": 1})
 
