@@ -29,7 +29,7 @@ class EthContractService:
     def get_function_sighashes(self, bytecode):
         bytecode = clean_bytecode(bytecode)
         if bytecode is not None:
-            evm_code = EvmCode(contract=Contract(bytecode=bytecode), debug=True, static_analysis=False, dynamic_analysis=False)
+            evm_code = EvmCode(contract=Contract(bytecode=bytecode), debug=False, static_analysis=False, dynamic_analysis=False)
             evm_code.disassemble(bytecode)
             basic_blocks = evm_code.basicblocks
             if basic_blocks and len(basic_blocks) > 0:
