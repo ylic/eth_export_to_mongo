@@ -26,7 +26,7 @@ from exporters.tokens_item_exporter import tokens_item_exporter
 from service.token_transfer_extractor import EthTokenTransferExtractor, TRANSFER_EVENT_TOPIC
 
 logger = logging.getLogger(__name__)
-logger.setLevel(level = logging.INFO)
+logger.setLevel(level = logging.DEBUG)
 
 class ExportBlocks():
     
