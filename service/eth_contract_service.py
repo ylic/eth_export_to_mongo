@@ -37,6 +37,7 @@ class EthContractService:
                 instructions = init_block.instructions
 
                 for inst in instructions:
+                    print('*********************')
                     print(inst)
 
 
