@@ -104,7 +104,7 @@ class ExportBlocks():
         #交易hash列表
         trans_hashes = self._export_block(block)
 
-        print('trans_hashes',trans_hashes)
+        # print('trans_hashes',trans_hashes)
 
         #导出token_transfer
         self._export_token_transfers(blocknumber)
