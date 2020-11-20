@@ -94,19 +94,19 @@ class ExportBlocks():
         # return
 
 
-        contract_addresses = ['0xa1edc78199a6e56fd52f69cf7c10f67ded15185d','0xea319e87cf06203dae107dd8e5672175e3ee976c','0x9d5155fbffd5bbb7555f13819a5b435b7befdcbd']
+        # contract_addresses = ['0xa1edc78199a6e56fd52f69cf7c10f67ded15185d','0xea319e87cf06203dae107dd8e5672175e3ee976c','0x9d5155fbffd5bbb7555f13819a5b435b7befdcbd']
 
 
-        query = { "address": { "$in": contract_addresses } }
+        # query = { "address": { "$in": contract_addresses } }
 
-        col = list(self.db['contract'].find(query,{"_id": 0, "address": 1}))
+        # col = self.db['contract'].find(query,{"_id": 0, "address": 1})
 
-        print(list(map(lambda item:item['address'],col)))
+        # print(list(map(lambda item:item['address'],col)))
 
-        # for x in col:
-        #     print(x)
+        # # for x in col:
+        # #     print(x)
 
-        return
+        # return
 
 
 
@@ -296,15 +296,20 @@ class ExportBlocks():
 
         #数据库去重
 
-        # query = { "address": { "$in": contract_addresses } , {"_id": 0, "address": 1} }
+        query = { "address": { "$in": contract_addresses } }
 
-        # col = self.db['contract'].find(query)
+        col = self.db['contract'].find(query,{"_id": 0, "address": 1})
+
+        exist_contracts = list(map(lambda item:item['address'],col)))
+
+        contract_addresses = [item for item in contract_addresses if item not in exist_contracts]
+
+        print(contract_addresses)
 
 
+        return
 
-
-
-
+        if len(contract_addresses) == 0: return
 
         contracts_code_rpc = list(generate_get_code_json_rpc(contract_addresses))
         response_batch = self.web3_provider_batch.make_request(json.dumps(contracts_code_rpc))
