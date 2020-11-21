@@ -32,7 +32,7 @@ from web3 import Web3
 # from web3.providers.base import JSONBaseProvider
 
 from web3.providers.ipc import get_default_ipc_path, PersistantSocket
-from web3._utils.threads import (
+from web3.utils.threads import (
     Timeout,
 )
 
